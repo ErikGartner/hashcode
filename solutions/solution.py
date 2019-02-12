@@ -17,3 +17,6 @@ def solve(in_file, seed=0, debug=True):
     # Use progressbar to display progress in the solution
     for x in progressbar(range(100000)):
         pass
+
+    parse_in(in_file)
+    write_ans(in_file, [])
