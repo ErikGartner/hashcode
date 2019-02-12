@@ -1,3 +1,4 @@
+import datetime
 import sortedcontainers
 import collections
 
@@ -19,8 +20,9 @@ def write_ans(in_file, answer):
     Takes an in_file and generates an appropriate outfile.
     Return the path to outfile.
     """
-    problem_name = in_file.split('/')[-1].replace('.in', '.ans')
-    outfile = 'out/{}'.format(problem_name)
+    problem_name = in_file.split('/')[-1].replace('.in', '')
+    t = datetime.datetime.now().strftime("%H-%M-%S-%f")
+    outfile = 'out/{}_{}.ans'.format(problem_name, t)
 
     print('Writing {} -> {}'.format(in_file, outfile))
     with open(outfile, 'w') as f:
