@@ -2,7 +2,7 @@ import argparse
 import glob
 import os
 
-from solutions import solve
+from solutions import solve, score_answers
 from solutions.utils import status
 
 
@@ -24,10 +24,15 @@ def parse_args():
                         help='seed for random functions')
     parser.add_argument('--debug', action='store_true',
                         help='show messages / progressbars')
+    parser.add_argument('--score', action='store_true',
+                        help='score answers')
     args = parser.parse_args()
     return args
 
 
 if __name__ == '__main__':
     args = parse_args()
-    main(args.problem, args.strategy, args.seed, args.debug)
+    if args.score:
+        score_answers()
+    else:
+        main(args.problem, args.strategy, args.seed, args.debug)

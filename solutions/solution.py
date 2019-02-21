@@ -17,4 +17,4 @@ def solve(in_file, strategy='default', seed=0, debug=True):
 
     data = parse_in(in_file)
     ans = solv_func(data, seed, debug)
-    write_ans(in_file, ans)
+    write_ans(in_file, strategy, ans)
