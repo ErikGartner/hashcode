@@ -1,22 +1,20 @@
 import random
+import importlib
 
-import sortedcontainers
-import collections
-import algorithms
-
-from .utils import parse_in, write_ans, dprint, progressbar
+from .utils import parse_in, write_ans
 
 
-def solve(in_file, seed=0, debug=True):
+def solve(in_file, strategy='default', seed=0, debug=True):
     """
     Generates a solution, use seed to ensure that we can search over many different.
     """
     print('Running: {}'.format(in_file))
     random.seed(seed)
 
-    # Use progressbar to display progress in the solution
-    for x in progressbar(range(100000)):
-        pass
+    full_path = 'solutions.strategies.%s' % strategy
+    mod = importlib.import_module(full_path)
+    solv_func = getattr(mod, 'solve')
 
-    parse_in(in_file)
-    write_ans(in_file, [])
+    data = parse_in(in_file)
+    ans = solv_func(data, seed, debug)
+    write_ans(in_file, ans)

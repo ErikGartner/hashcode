@@ -6,16 +6,18 @@ from solutions import solve
 from solutions.utils import status
 
 
-def main(problem_filter, seed, debug):
+def main(problem_filter, strategy, seed, debug):
     status.DEBUG = debug
 
     for in_file in sorted(glob.glob(os.path.join('data', problem_filter) + '*')):
-        solve(in_file, seed, debug)
+        solve(in_file, strategy, seed, debug)
 
 
 def parse_args():
     """Arg parsing"""
     parser = argparse.ArgumentParser(description='Hashcode Solution')
+    parser.add_argument('--strategy', type=str, nargs='?', default='default',
+                        help='the strategy module name')
     parser.add_argument('--problem', type=str, nargs='?', default='',
                         help='a filter for the problem / data to run on')
     parser.add_argument('--seed', type=int, nargs='?', default=0,
@@ -28,4 +30,4 @@ def parse_args():
 
 if __name__ == '__main__':
     args = parse_args()
-    main(args.problem, args.seed, args.debug)
+    main(args.problem, args.strategy, args.seed, args.debug)
