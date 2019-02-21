@@ -2,12 +2,21 @@ import datetime
 import sortedcontainers
 import collections
 
-Point = collections.namedtuple('Point', 'x y')
+from solutions.strategies.utils import *
+
+Request = collections.namedtuple('Request', 'n a b x y s f score')
+Car = collections.namedtuple('Car', 'id')
 
 
 def parse_in(in_file):
-    with open(in_file, 'r') as f:
-        pass
+    with open(in_file, 'r') as file:
+        R, C, F, N, B, T = [int(x) for x in file.readline().split()]
+        requests = []
+        for n in range(N):
+            a, b, x, y, s, f = [int(x) for x in file.readline().split()]
+            requests.append(Request(n, a, b, x, y, s, f, dist(a, b, x, y)))
+    cars = [Car(f) for f in range(F)]
+    return R, C, F, B, T, requests, cars
 
 
 def parse_ans(ans_file):
@@ -26,4 +35,6 @@ def write_ans(in_file, strategy, answer):
 
     print('Writing {} -> {}'.format(in_file, outfile))
     with open(outfile, 'w') as f:
-        pass
+        for car in answer:
+            f.write(' '.join([str(x) for x in car.requests]))
+            f.write('\n')
