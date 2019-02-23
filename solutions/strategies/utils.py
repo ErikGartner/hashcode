@@ -26,6 +26,14 @@ def time_finished(car_x, car_y, a, b, x, y, t, s):
     return T, on_time
 
 
+def assign_car(c, r, t, map, orderbook, free_cars):
+    car_x, car_y = map.car_pos[c]
+    T_fin, on_time = time_finished(car_x, car_y, r.a, r.b, r.x, r.y, t, r.s)
+    map.move(c, car_x, car_y, r.x, r.y, T_fin)
+    orderbook.order_done(c, r)
+    free_cars.remove(c)
+
+
 class Map():
 
     def __init__(self):
@@ -39,12 +47,13 @@ class Map():
         self.car_pos[car] = (0, 0)
         self.car_ready_times[car] = 0
 
-    def cars(self, x, y):
+    def cars_at(self, x, y):
         return [c for c in self.cars[(x, y)] if self.car_ready_times[c] <= self.t]
 
     def move(self, car, x1, y1, x2, y2, T):
         """Move a car from x1, y1 to x2, y2, it will be ready at time T"""
         assert(car in self.cars[(x1, y1)])
+        assert(self.car_ready_times[car] <= self.t)
         self.cars[(x1, y1)].remove(car)
         self.cars[(x2, y2)].add(car)
         self.car_pos[car] = (x2, y2)
@@ -54,11 +63,11 @@ class Map():
         cars = set()
         for xr in range(x - radius, x + radius + 1):
             for yr in range(y - radius, y + radius + 1):
-                cars.update(self.cars[(xr, yr)])
+                cars.update(self.cars_at(xr, yr))
         return cars
 
     def free_cars(self):
-        return set([c for c, t in self.car_ready_times.items() if t <= self.t])
+        return set([c for c, t in self.car_ready_times.items() if self.t >= t])
 
 
 class Orderbook():
@@ -89,5 +98,7 @@ class Orderbook():
     def get_ans(self, cars):
         ans = ''
         for c in cars:
-            ans += '{} {}\n'.format(c.id, ' '.join([str(x) for x in self.done[c]]))
+            if len(self.done[c]) > 0:
+                ans += '{} {}\n'.format(c.id,
+                                        ' '.join([str(x) for x in self.done[c]]))
         return ans

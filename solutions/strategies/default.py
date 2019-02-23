@@ -6,6 +6,7 @@ from ..utils import parse_in, write_ans, dprint, progressbar
 from .utils import *
 
 
+
 def solve(data, seed, debug):
     R, C, F, B, T, requests, cars = data
 
@@ -24,19 +25,28 @@ def solve(data, seed, debug):
         free_cars = map.free_cars()
         dprint('Free cars:', len(free_cars))
 
-        for r in orderbook.start_requests:
-            if r.s > t + 5:
-                break
+        SEARCH_DIST = 5
 
-            cs = map.nearby_cars(r.a, r.b, int(R))
-            dprint('Nearby cars', len(cs))
+        upcoming_requests = SortedSet([], key=lambda x: x.score)
+        for r in orderbook.start_requests:
+            if r.s > t + SEARCH_DIST:
+                break
+            upcoming_requests.add(r)
+
+        for r in reversed(upcoming_requests):
+            cs = map.nearby_cars(r.a, r.b, SEARCH_DIST)
             if len(cs) == 0:
                 continue
 
             cs = sorted(cs, key=(lambda c: dist(*map.car_pos[c], r.a, r.b)))
-            car_x, car_y = map.car_pos[cs[0]]
-            T_fin, on_time = time_finished(car_x, car_y, r.a, r.b, r.x, r.y, t, r.s)
-            map.move(cs[0], car_x, car_y, r.x, r.y, T_fin)
-            orderbook.order_done(cs[0], r)
+            assign_car(cs[0], r, t, map, orderbook, free_cars)
+
+        # Assign unused cars
+        for r in orderbook.start_requests:
+            if len(free_cars) == 0:
+                break
+
+            cs = sorted(free_cars, key=(lambda c: dist(*map.car_pos[c], r.a, r.b)))
+            assign_car(cs[0], r, t, map, orderbook, free_cars)
 
     return orderbook.get_ans(cars)
