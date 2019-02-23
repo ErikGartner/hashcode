@@ -16,7 +16,7 @@ def parse_in(in_file):
             a, b, x, y, s, f = [int(x) for x in file.readline().split()]
             requests.append(Request(n, a, b, x, y, s, f, dist(a, b, x, y)))
     cars = [Car(f) for f in range(F)]
-    return R, C, F, B, T, requests, cars
+    return R, C, F, B, T, set(requests), cars
 
 
 def parse_ans(ans_file):

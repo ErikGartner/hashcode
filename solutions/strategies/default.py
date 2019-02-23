@@ -1,4 +1,4 @@
-from sortedcontainers import SortedList
+from sortedcontainers import SortedList, SortedSet
 import collections
 import algorithms
 
@@ -12,18 +12,19 @@ def solve(data, seed, debug):
     map = Map()
     [map.add_car(c) for c in cars]
 
-
     # sort request by score
-    score_requests = SortedList(requests, key=lambda x: x.score)
+    scored_requests = SortedSet(requests, key=lambda x: x.score)
+    start_requests = SortedSet(requests, key=lambda x: x.s)
+    finish_requests = SortedSet(requests, key=lambda x: x.f)
 
     for t in progressbar(range(T)):
+        # Update map time
+        map.t = t
+
         # Only keep valid requests
-        requests = filter_requests(requests, t)
+        filter_requests(requests, t, scored_requests, start_requests,
+                        finish_requests)
 
-
-        for request in reversed(requests):
-            pass
-
-
+        free_cars = map.free_cars()
 
     return []
