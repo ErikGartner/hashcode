@@ -41,6 +41,7 @@ if __name__ == '__main__':
     args = parse_args()
     if args.score:
         score_answers()
+        exit(0)
 
     if args.profile:
         print('Profiling...')
