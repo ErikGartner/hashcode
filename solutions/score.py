@@ -3,11 +3,7 @@ import os
 import json
 
 from .utils.parser import parse_ans
-
-
-def do_scoring(ans):
-    """Implement me to do actual scoring from answer"""
-    return 0
+from .scoring import compute_score
 
 
 def score_answers():
@@ -19,8 +15,11 @@ def score_answers():
             # Already scored, skip file
             continue
 
-        ans = parse_ans(ans_file)
-        score = do_scoring(ans)
+        #ans = parse_ans(ans_file)
+        problem_file = ans_file.rsplit('_', 2)[0].split('/')[1] + '.in'
+        problem_path = os.path.realpath('data/' + problem_file)
+        ans_path = os.path.realpath(ans_file)
+        score = compute_score(problem_path, ans_file).total()
         print('Scoring {} -> {}: {}'.format(ans_file, out_file, score))
 
         with open(out_file, 'w') as f:
