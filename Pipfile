@@ -10,6 +10,7 @@ nose = "*"
 sortedcontainers = "*"
 algorithms = "*"
 tqdm = "*"
+takethetime = "*"
 
 [requires]
 python_version = "3.5"

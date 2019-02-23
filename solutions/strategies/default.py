@@ -2,9 +2,8 @@ from sortedcontainers import SortedList, SortedSet
 import collections
 import algorithms
 
-from ..utils import parse_in, write_ans, dprint, progressbar
+from ..utils import parse_in, write_ans, dprint, progressbar, timethis
 from .utils import *
-
 
 
 def solve(data, seed, debug):
@@ -16,24 +15,27 @@ def solve(data, seed, debug):
 
     for t in progressbar(range(T)):
         # Update map time
-        dprint(t)
         map.t = t
         orderbook.t = t
 
         orderbook.purge_old()
 
         free_cars = map.free_cars()
-        dprint('Free cars:', len(free_cars))
+        SEARCH_DIST = 20
 
-        SEARCH_DIST = 5
-
-        upcoming_requests = SortedSet([], key=lambda x: x.score)
-        for r in orderbook.start_requests:
+        upcoming_requests = set()
+        for r in orderbook.start_requests.islice(None, 100, True):
             if r.s > t + SEARCH_DIST:
                 break
-            upcoming_requests.add(r)
 
-        for r in reversed(upcoming_requests):
+            if r.f >= t + SEARCH_DIST:
+                upcoming_requests.add(r)
+        upcoming_requests = SortedSet(upcoming_requests, key=lambda x: x.score)
+
+        for r in upcoming_requests.islice(-5, None, True):
+            if len(free_cars) == 0:
+                break
+
             cs = map.nearby_cars(r.a, r.b, SEARCH_DIST)
             if len(cs) == 0:
                 continue
