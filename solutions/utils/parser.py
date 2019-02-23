@@ -35,6 +35,4 @@ def write_ans(in_file, strategy, answer):
 
     print('Writing {} -> {}'.format(in_file, outfile))
     with open(outfile, 'w') as f:
-        for car in answer:
-            f.write(' '.join([str(x) for x in car.requests]))
-            f.write('\n')
+        f.write(answer)

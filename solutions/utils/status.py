@@ -11,7 +11,4 @@ def dprint(*msg, **kwargs):
 
 
 def progressbar(itr):
-    if not DEBUG:
-        return itr
-    else:
-        return tqdm(itr)
+    return tqdm(itr)
