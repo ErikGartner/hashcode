@@ -30,6 +30,7 @@ def parse_ans(ans_file):
     return slide
 
 
+
 def write_ans(in_file, strategy, answer):
     """
     Takes an in_file and generates an appropriate outfile.
@@ -41,4 +42,10 @@ def write_ans(in_file, strategy, answer):
 
     print('Writing {} -> {}'.format(in_file, outfile))
     with open(outfile, 'w') as f:
-        pass
+        f.write('%d\n' % len(answer))
+        for slide_idx in range(len(answer)):
+            slide_str = ''
+            for id in answer[slide_idx].ids:
+                slide_str += id + ' '
+            slide_str += '\n'
+            f.write(slide_str)
