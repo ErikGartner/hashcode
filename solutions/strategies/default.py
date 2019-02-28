@@ -9,10 +9,15 @@ from solutions.score import score_pair
 
 def solve(photos, seed, debug):
 
-    photos_by_nbr_tags = sortedcontainers.SortedSet([p.id for p in photos],
-                                                    key=lambda x: len(photos[x].tags))
+    hor_nbr_tags = sortedcontainers.SortedSet([p.id for p in photos if p.horizontal],
+                                               key=lambda x: len(photos[x].tags))
+    ver_nbr_tags = sortedcontainers.SortedSet([p.id for p in photos if not p.horizontal],
+                                               key=lambda x: len(photos[x].tags))
+
     used_photos = set()
     tag_counter = tag_info(photos)
+
+
 
 
 
