@@ -5,9 +5,50 @@ import json
 from .utils.parser import parse_ans
 
 
-def do_scoring(ans):
+def do_scoring(ans, photos):
     """Implement me to do actual scoring from answer"""
-    return 0
+
+    def score_pair(tags1, tags2):
+        s1 = set(tags1)
+        s2 = set(tags2)
+        return min(len(s1-s2), len(s2-s1), len(s1.intersection(s2)))
+
+    def valid_slide(ps):
+        if len(ps) == 1:
+            return ps[0].horizontal
+        elif len(ps) == 2:
+            return not ps[0].horizontal and not ps[1].horizontal
+        else:
+            return False
+
+    def get_tags(ps):
+        tags = []
+        for p in ps:
+            tags.extend(p.tags)
+        return tags
+
+    def get_photos(photos, ids1, ids2):
+        p1 = [photos[i] for i in ids1]
+        p2 = [photos[i] for i in ids2]
+        return p1, p2
+
+    score = 0
+    for i1 in range(len(ans) - 1):
+        i2 = i1 + 1
+
+        p1, p2 = get_photos(photos, ans[i1].ids, ans[i2].ids)
+
+        if not valid_slide(p1) or not valid_slide(p2):
+            print('Invalid slide (%s -> %s) %s -> %s' % (ans[i1].ids,
+                                                         ans[i2].ids,
+                                                         p1, p2))
+            return 0
+        tags1 = get_tags(p1)
+        tags2 = get_tags(p2)
+
+        s = score_pair(tags1, tags2)
+        score += s
+    return score
 
 
 def score_answers():
