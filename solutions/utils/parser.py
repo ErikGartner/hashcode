@@ -46,6 +46,6 @@ def write_ans(in_file, strategy, answer):
         for slide_idx in range(len(answer)):
             slide_str = ''
             for id in answer[slide_idx].ids:
-                slide_str += id + ' '
+                slide_str += str(id) + ' '
             slide_str += '\n'
             f.write(slide_str)
