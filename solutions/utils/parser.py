@@ -14,7 +14,7 @@ def parse_in(in_file):
             elems = f.readline().split()
             photo = Photo(id=i,
                           horizontal=elems[0] == 'H',
-                          tags=set(elems[1:]))
+                          tags=set(elems[2:]))
             photos.append(photo)
     return photos
 
