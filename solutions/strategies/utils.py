@@ -14,4 +14,4 @@ def tag_groups(photos):
                 groups[tag] = set([photo.id])
             else:
                 groups[tag].add(photo.id)
-    return tag_groups
+    return groups
