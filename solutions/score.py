@@ -2,7 +2,7 @@ import glob
 import os
 import json
 
-from .utils.parser import parse_ans
+from .utils.parser import parse_ans, parse_in
 
 
 def score_pair(tags1, tags2):
@@ -62,7 +62,10 @@ def score_answers():
             continue
 
         ans = parse_ans(ans_file)
-        score = do_scoring(ans)
+        infile = ans_file.replace('out', 'data')
+        infile = infile.rsplit('_', 2)[0] + '.in'
+        photos = parse_in(infile)
+        score = do_scoring(ans, photos)
         print('Scoring {} -> {}: {}'.format(ans_file, out_file, score))
 
         with open(out_file, 'w') as f:

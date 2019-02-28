@@ -15,18 +15,32 @@ def solve(photos, seed, debug):
                                                key=lambda x: len(photos[x].tags))
     ver_nbr_tags = sortedcontainers.SortedSet([p.id for p in photos if not p.horizontal],
                                                key=lambda x: len(photos[x].tags))
+    all_nbr_tags = sortedcontainers.SortedSet([p.id for p in photos],
+                                               key=lambda x: len(photos[x].tags))
 
     used_photos = set()
     tag_counter = tag_info(photos)
     tag_dict = tag_groups(photos)
 
+    def remove_photo(p):
+        if p.id in hor_nbr_tags:
+            hor_nbr_tags.remove(p.id)
+        if p.id in ver_nbr_tags:
+            ver_nbr_tags.remove(p.id)
+        if p.id in all_nbr_tags:
+            all_nbr_tags.remove(p.id)
+        used_photos.add(p.id)
+        for tag in p.tags:
+            tag_counter[tag] -= 1
+            tag_dict[tag].remove(p.id)
+
     slides = [
         # Set first slide as a horizontal with many tags
-        Slide(ids=[hor_nbr_tags.pop(0)])
+        Slide(ids=[hor_nbr_tags.pop(-1)])
     ]
 
     # Add to used photos
-    used_photos.add(slides[0].ids[0])
+    remove_photo(photos[slides[0].ids[0]])
 
     # Until all photos are used
     while len(used_photos) < len(photos):
@@ -38,12 +52,43 @@ def solve(photos, seed, debug):
         # Find photos with related tags
         related_photos = collections.Counter()
         for tag in tags1:
-            dprint(tags1)
             related_photos.update(tag_dict[tag])
 
-        dprint(related_photos)
+        # returns photo with most in common
+        if len(related_photos.most_common()) == 0:
+            # No in common
+            p1 = photos[all_nbr_tags.pop(-1)]
 
+        else:
+            # Find a photo with good score
+            possibilities = related_photos.most_common(50)
+            scored_possibilities = [(x[0], score_pair(photos[x[0]].tags, tags1))
+                                    for x in possibilities]
+            scored_possibilities.sort(key=lambda x: x[1], reverse=True)
 
+            p1 = photos[scored_possibilities[0][0]]
+
+        # p1 now contains the other photo
+        remove_photo(p1)
+        ids = [p1.id]
+
+        if not p1.horizontal:
+            # Find optimal match for vertical
+            max_score = -1
+            best = None
+            for i in ver_nbr_tags:
+                s = score_pair(tags1, p1.tags.union(photos[i].tags))
+                if s > max_score:
+                    best = i
+                    max_score = s
+
+            p2 = photos[best]
+            remove_photo(p2)
+            ids.append(p2.id)
+
+        slides.append(Slide(ids=ids))
+
+    return slides
 
 
 
