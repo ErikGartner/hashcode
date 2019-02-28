@@ -36,13 +36,18 @@ def solve(photos, seed, debug):
             tag_counter[tag] -= 1
             tag_dict[tag].remove(p.id)
 
+    p1 = photos[all_nbr_tags.pop(-1)]
+    ids = [p1.id]
+    remove_photo(p1)
+    if not p1.horizontal:
+        p2 = photos[ver_nbr_tags.pop(-1)]
+        ids.append(p2.id)
+        remove_photo(p2)
+
     slides = [
         # Set first slide as a horizontal with many tags
-        Slide(ids=[all_nbr_tags.pop(-1)])
+        Slide(ids=ids)
     ]
-
-    # Add to used photos
-    remove_photo(photos[slides[0].ids[0]])
 
     # Until all photos are used
     while len(used_photos) < len(photos):
@@ -92,7 +97,7 @@ def solve(photos, seed, debug):
             # Find optimal match for vertical
             max_score = -1
             best = None
-            for i in ver_nbr_tags[:100]:
+            for i in ver_nbr_tags[:500]:
                 s = score_pair(tags1, p1.tags.union(photos[i].tags))
                 if s > max_score:
                     best = i
@@ -104,8 +109,8 @@ def solve(photos, seed, debug):
                 p2 = photos[best]
 
             assert(p2 is not None)
-            remove_photo(p2)
             ids.append(p2.id)
+            remove_photo(p2)
 
         slides.append(Slide(ids=ids))
 
