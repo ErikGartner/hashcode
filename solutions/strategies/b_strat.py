@@ -75,8 +75,7 @@ def solve(photos, seed, debug):
             t0 = time.time()
             most_com = related_photos.most_common()
             possibilities = most_com
-            scored_possibilities = [(x[0], score_pair(photos[x[0]].tags, tags1) - len(photos[x[0]].tags))
-                                    for x in possibilities]
+            scored_possibilities = [(x[0], score_pair(photos[x[0]].tags, tags1) + 0.1 *( score_pair(photos[x[0]].tags, tags1) - len(photos[x[0]].tags))) for x in possibilities]
             scored_possibilities.sort(key=lambda x: x[1], reverse=True)
 
             p1 = photos[scored_possibilities[0][0]]
