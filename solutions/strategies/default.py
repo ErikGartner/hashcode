@@ -60,9 +60,11 @@ def solve(photos, seed, debug):
         # Find photos with related tags
         related_photos = collections.Counter()
 
+        stop_tags = [x[0] for x in tag_counter.most_common(3)]
+
         t0 = time.time()
         for tag, count in tag_counter.most_common():
-            if tag in tags1:
+            if tag in tags1 and tag not in stop_tags:
                 related_photos.update(tag_dict[tag])
             if sum(related_photos.values()) > 100:
                 break
@@ -94,14 +96,16 @@ def solve(photos, seed, debug):
                 # Skip these photos
                 continue
 
+            t0 = time.time()
             # Find optimal match for vertical
             max_score = -1
             best = None
-            for i in ver_nbr_tags[:500]:
+            for i in ver_nbr_tags[:250] + ver_nbr_tags[-250:]:
                 s = score_pair(tags1, p1.tags.union(photos[i].tags))
                 if s > max_score:
                     best = i
                     max_score = s
+            dprint('Finding vertical match: ', time.time() - t0)
 
             if best is None:
                 p2 = photos[ver_nbr_tags.pop(-1)]
