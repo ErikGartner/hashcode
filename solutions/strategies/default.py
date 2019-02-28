@@ -98,7 +98,12 @@ def solve(photos, seed, debug):
                     best = i
                     max_score = s
 
-            p2 = photos[best]
+            if best is None:
+                p2 = photos[ver_nbr_tags.pop(-1)]
+            else:
+                p2 = photos[best]
+
+            assert(p2 is not None)
             remove_photo(p2)
             ids.append(p2.id)
 
