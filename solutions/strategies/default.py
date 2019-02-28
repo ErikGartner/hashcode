@@ -60,18 +60,17 @@ def solve(photos, seed, debug):
         # Find photos with related tags
         related_photos = collections.Counter()
 
-        stop_tags = set([x[0] for x in tag_counter.most_common(3)])
 
         t0 = time.time()
         for tag, count in tag_counter.most_common():
-            if tag in tags1 and tag not in stop_tags:
+            if tag in tags1:
                 related_photos.update(tag_dict[tag])
             if sum(related_photos.values()) > 500:
                 break
 
         c2 = 0
         for tag, count in tag_counter.most_common()[-100:]:
-            if tag in tags1 and tag not in stop_tags:
+            if tag in tags1:
                 related_photos.update(tag_dict[tag])
                 c2 += count
             if c2 > 200:
@@ -87,7 +86,7 @@ def solve(photos, seed, debug):
             # Find a photo with good score
             t0 = time.time()
             possibilities = related_photos.most_common(100)
-            scored_possibilities = [(x[0], score_pair(photos[x[0]].tags, tags1))
+            scored_possibilities = [(x[0], score_pair(photos[x[0]].tags, tags1) - len(photos[x[0]].tags))
                                     for x in possibilities]
             scored_possibilities.sort(key=lambda x: x[1], reverse=True)
 
@@ -117,7 +116,7 @@ def solve(photos, seed, debug):
                     continue
 
                 cmps += 1
-                s = score_pair(tags1, p1.tags.union(photos[i].tags))
+                s = score_pair(tags1, p1.tags.union(photos[i].tags)) - len(photos[i].tags)
                 if s > max_score:
                     best = i
                     max_score = s
