@@ -113,7 +113,7 @@ def solve(photos, seed, debug):
             cmps = 0
             for i in reversed(ver_nbr_tags):
                 tags_vert = p1.tags.union(photos[i].tags)
-                if len( p1.tags) == len(tags_vert):
+                if len(p1.tags) == len(tags_vert):
                     continue
 
                 cmps += 1
