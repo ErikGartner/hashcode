@@ -3,6 +3,7 @@ import sortedcontainers
 import collections
 
 Photo = collections.namedtuple('Photo', 'id horizontal tags')
+Slide = collections.namedtuple('Slide', 'ids')
 
 
 def parse_in(in_file):
@@ -20,7 +21,13 @@ def parse_in(in_file):
 
 def parse_ans(ans_file):
     with open(ans_file, 'r') as f:
-        pass
+        S = int(f.readline())
+        slides = []
+        for s in range(S):
+            ids = [int(i) for i in f.readline().split()]
+            slide = Slide(ids)
+            slides.append(slide)
+    return slide
 
 
 def write_ans(in_file, strategy, answer):
