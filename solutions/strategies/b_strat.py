@@ -73,7 +73,8 @@ def solve(photos, seed, debug):
         else:
             # Find a photo with good score
             t0 = time.time()
-            possibilities = related_photos.most_common(50)
+            most_com = related_photos.most_common()
+            possibilities = most_com#most_com[:250] + most_com[-250:]
             scored_possibilities = [(x[0], score_pair(photos[x[0]].tags, tags1))
                                     for x in possibilities]
             scored_possibilities.sort(key=lambda x: x[1], reverse=True)

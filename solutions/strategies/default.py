@@ -66,7 +66,15 @@ def solve(photos, seed, debug):
         for tag, count in tag_counter.most_common():
             if tag in tags1 and tag not in stop_tags:
                 related_photos.update(tag_dict[tag])
-            if sum(related_photos.values()) > 100:
+            if sum(related_photos.values()) > 500:
+                break
+
+        c2 = 0
+        for tag, count in tag_counter.most_common()[-100:]:
+            if tag in tags1 and tag not in stop_tags:
+                related_photos.update(tag_dict[tag])
+                c2 += count
+            if c2 > 200:
                 break
         dprint('Related photos', len(related_photos), time.time() - t0)
 
@@ -78,7 +86,7 @@ def solve(photos, seed, debug):
         else:
             # Find a photo with good score
             t0 = time.time()
-            possibilities = related_photos.most_common(50)
+            possibilities = related_photos.most_common(100)
             scored_possibilities = [(x[0], score_pair(photos[x[0]].tags, tags1))
                                     for x in possibilities]
             scored_possibilities.sort(key=lambda x: x[1], reverse=True)
@@ -98,13 +106,24 @@ def solve(photos, seed, debug):
 
             t0 = time.time()
             # Find optimal match for vertical
+            # should tags not in p1
+            related_photos = collections.Counter()
             max_score = -1
             best = None
-            for i in ver_nbr_tags[:250] + ver_nbr_tags[-250:]:
+            cmps = 0
+            for i in reversed(ver_nbr_tags):
+                tags_vert = p1.tags.union(photos[i].tags)
+                if len( p1.tags) == len(tags_vert):
+                    continue
+
+                cmps += 1
                 s = score_pair(tags1, p1.tags.union(photos[i].tags))
                 if s > max_score:
                     best = i
                     max_score = s
+
+                if cmps > 500:
+                    break
             dprint('Finding vertical match: ', time.time() - t0)
 
             if best is None:
