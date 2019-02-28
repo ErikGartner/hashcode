@@ -60,14 +60,9 @@ def solve(photos, seed, debug):
         # Find photos with related tags
         related_photos = collections.Counter()
 
-        stop_tags = set([x[0] for x in tag_counter.most_common(3)])
-
         t0 = time.time()
-        for tag, count in tag_counter.most_common():
-            if tag in tags1 and tag not in stop_tags:
-                related_photos.update(tag_dict[tag])
-            if sum(related_photos.values()) > 100:
-                break
+        for tag in tags1:
+            related_photos.update(tag_dict[tag])
         dprint('Related photos', len(related_photos), time.time() - t0)
 
         # returns photo with most in common
