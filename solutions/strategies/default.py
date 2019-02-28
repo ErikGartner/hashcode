@@ -1,3 +1,5 @@
+import time
+
 import sortedcontainers
 import collections
 import algorithms
@@ -36,7 +38,7 @@ def solve(photos, seed, debug):
 
     slides = [
         # Set first slide as a horizontal with many tags
-        Slide(ids=[hor_nbr_tags.pop(-1)])
+        Slide(ids=[all_nbr_tags.pop(-1)])
     ]
 
     # Add to used photos
@@ -44,6 +46,7 @@ def solve(photos, seed, debug):
 
     # Until all photos are used
     while len(used_photos) < len(photos):
+        print('Progress', len(used_photos), len(photos))
 
         # previous photo
         tags1 = set()
@@ -51,8 +54,14 @@ def solve(photos, seed, debug):
 
         # Find photos with related tags
         related_photos = collections.Counter()
-        for tag in tags1:
-            related_photos.update(tag_dict[tag])
+
+        t0 = time.time()
+        for tag, count in tag_counter.most_common():
+            if tag in tags1:
+                related_photos.update(tag_dict[tag])
+            if sum(related_photos.values()) > 100:
+                break
+        dprint('Related photos', len(related_photos), time.time() - t0)
 
         # returns photo with most in common
         if len(related_photos.most_common()) == 0:
@@ -61,22 +70,29 @@ def solve(photos, seed, debug):
 
         else:
             # Find a photo with good score
+            t0 = time.time()
             possibilities = related_photos.most_common(50)
             scored_possibilities = [(x[0], score_pair(photos[x[0]].tags, tags1))
                                     for x in possibilities]
             scored_possibilities.sort(key=lambda x: x[1], reverse=True)
 
             p1 = photos[scored_possibilities[0][0]]
+            dprint('Scoring photos: ', time.time() - t0)
 
         # p1 now contains the other photo
         remove_photo(p1)
         ids = [p1.id]
 
         if not p1.horizontal:
+            if len(ver_nbr_tags) == 0:
+                # No more veritcal photos
+                # Skip these photos
+                continue
+
             # Find optimal match for vertical
             max_score = -1
             best = None
-            for i in ver_nbr_tags:
+            for i in ver_nbr_tags[:100]:
                 s = score_pair(tags1, p1.tags.union(photos[i].tags))
                 if s > max_score:
                     best = i
