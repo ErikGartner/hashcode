@@ -9,6 +9,16 @@ from solutions.score import score_pair
 
 def solve(photos, seed, debug):
 
-    tag_counter = tags_info(photos)
-    dprint(tag_counter)
-    dprint(len(tag_counter))
+    photos_by_nbr_tags = sortedcontainers.SortedSet([p.id for p in photos],
+                                                    key=lambda x: len(photos[x].tags))
+    used_photos = set()
+    tag_counter = tag_info(photos)
+
+
+
+
+
+
+
+
+    return []
