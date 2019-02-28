@@ -5,13 +5,14 @@ import json
 from .utils.parser import parse_ans
 
 
+def score_pair(tags1, tags2):
+    s1 = set(tags1)
+    s2 = set(tags2)
+    return min(len(s1-s2), len(s2-s1), len(s1.intersection(s2)))
+
+
 def do_scoring(ans, photos):
     """Implement me to do actual scoring from answer"""
-
-    def score_pair(tags1, tags2):
-        s1 = set(tags1)
-        s2 = set(tags2)
-        return min(len(s1-s2), len(s2-s1), len(s1.intersection(s2)))
 
     def valid_slide(ps):
         if len(ps) == 1:
