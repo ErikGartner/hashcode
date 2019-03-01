@@ -4,7 +4,7 @@ import importlib
 from .utils import parse_in, write_ans
 
 
-def solve(in_file, strategy='default', seed=0, debug=True):
+def solve(in_file, start_time, strategy='default', seed=0, debug=True):
     """
     Generates a solution, use seed to ensure that we can search over many different.
     """
@@ -17,4 +17,4 @@ def solve(in_file, strategy='default', seed=0, debug=True):
 
     data = parse_in(in_file)
     ans = solv_func(data, seed, debug)
-    write_ans(in_file, strategy, ans)
+    write_ans(in_file, start_time, strategy, ans)

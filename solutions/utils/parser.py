@@ -15,14 +15,14 @@ def parse_ans(ans_file):
         pass
 
 
-def write_ans(in_file, strategy, answer):
+def write_ans(in_file, start_time, strategy, answer):
     """
     Takes an in_file and generates an appropriate outfile.
     Return the path to outfile.
     """
+
     problem_name = in_file.split('/')[-1].replace('.in', '')
-    t = datetime.datetime.now().strftime("%H-%M-%S-%f")
-    outfile = 'out/{}_{}_{}.ans'.format(problem_name, strategy, t)
+    outfile = 'out/{}_{}_{}.ans'.format(start_time, problem_name, strategy)
 
     print('Writing {} -> {}'.format(in_file, outfile))
     with open(outfile, 'w') as f:
