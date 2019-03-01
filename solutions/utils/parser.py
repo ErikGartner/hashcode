@@ -27,8 +27,7 @@ def parse_ans(ans_file):
             ids = [int(i) for i in f.readline().split()]
             slide = Slide(ids)
             slides.append(slide)
-    return slide
-
+    return slides
 
 
 def write_ans(in_file, strategy, answer):

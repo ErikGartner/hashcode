@@ -1,0 +1,30 @@
+{
+  "a_example": {
+    "ans": "out/a_example_default_20-33-08-280927.ans",
+    "score": 2
+  },
+  "b_lovely_landscapes_b": {
+    "ans": "out/b_lovely_landscapes_b_strat_22-12-21-869427.ans",
+    "score": 224739
+  },
+  "b_lovely_landscapes": {
+    "ans": "out/b_lovely_landscapes_default_20-38-29-661138.ans",
+    "score": 202608
+  },
+  "c_memorable_moments_b": {
+    "ans": "out/c_memorable_moments_b_strat_22-16-24-308183.ans",
+    "score": 1492
+  },
+  "c_memorable_moments": {
+    "ans": "out/c_memorable_moments_default_20-38-30-282062.ans",
+    "score": 1750
+  },
+  "d_pet_pictures": {
+    "ans": "out/d_pet_pictures_default_22-07-24-968922.ans",
+    "score": 360351
+  },
+  "e_shiny_selfies": {
+    "ans": "out/e_shiny_selfies_default_22-09-36-665863.ans",
+    "score": 447531
+  }
+}

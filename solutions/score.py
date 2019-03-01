@@ -29,6 +29,8 @@ def do_scoring(ans, photos):
         return tags
 
     def get_photos(photos, ids1, ids2):
+        assert(all([i < len(photos) for i in ids1]))
+        assert(all([i < len(photos) for i in ids2]))
         p1 = [photos[i] for i in ids1]
         p2 = [photos[i] for i in ids2]
         return p1, p2
@@ -62,8 +64,7 @@ def score_answers():
             continue
 
         ans = parse_ans(ans_file)
-        infile = ans_file.replace('out', 'data')
-        infile = infile.rsplit('_', 2)[0] + '.in'
+        infile = glob.glob('data/%s*' % ans_file[4])[0]
         photos = parse_in(infile)
         score = do_scoring(ans, photos)
         print('Scoring {} -> {}: {}'.format(ans_file, out_file, score))
