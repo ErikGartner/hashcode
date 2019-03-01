@@ -41,6 +41,17 @@ def parse_args():
     return args
 
 
+def zip_submission(start_time):
+    excluded_dirs = set(['data', 'out', 'tests', 'venv', '__pycache__'])
+    zip_path = './out/%s_code.zip' % start_time
+    ziphandle = zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED)
+    for root, dirs, files in os.walk('.', topdown=True):
+        dirs[:] = [d for d in dirs if d not in excluded_dirs]
+        for file in files:
+            ziphandle.write(os.path.join(root, file))
+    ziphandle.close()
+
+
 if __name__ == '__main__':
     args = parse_args()
     if args.score:
@@ -50,14 +61,7 @@ if __name__ == '__main__':
     start_time = datetime.datetime.now().strftime("%H-%M-%S-%f")
 
     if not args.nozip:
-        excluded_dirs = set(['data', 'out', 'tests', 'venv', '__pycache__'])
-        zip_path = './out/%s_code.zip' % start_time
-        ziphandle = zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED)
-        for root, dirs, files in os.walk('.', topdown=True):
-            dirs[:] = [d for d in dirs if d not in excluded_dirs]
-            for file in files:
-                ziphandle.write(os.path.join(root, file))
-        ziphandle.close()
+        zip_submission(start_time)
 
     if args.profile:
         print('Profiling...')
