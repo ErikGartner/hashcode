@@ -18,3 +18,7 @@
   - `parse_ans()` in `solutions/utils/parser.py` to parse answers
   - Scoring in `solutions/score.py` by implementing `do_scoring()`
   - Advanced strategies in `solutions/strategies/`
+
+## Team
+- [Erik Gärtner](https://gartner.io)
+- [Johan Ahlkvist](https://github.com/johanahlqvist)
