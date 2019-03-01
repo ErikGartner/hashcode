@@ -1,6 +1,11 @@
+# Hashcode
+*Our template and solutions starting from 2019*
 
+## Results
 
-## Instructions
+- **[2019](https://github.com/ErikGartner/hashcode/tree/2019):** *Our heaps don't lie*, 36th place out of ~6500 teams with 1,073,160 pts
+
+## Strategy
 
 1. Read problem statement
 2. Add in-files to data. Make sure they end `.in`

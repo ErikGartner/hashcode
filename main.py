@@ -42,7 +42,8 @@ def parse_args():
 
 
 def zip_submission(start_time):
-    excluded_dirs = set(['data', 'out', 'tests', 'venv', '__pycache__'])
+    excluded_dirs = set(['.git', 'data', 'out',
+                         'tests', 'venv', '.DS_Store', '__pycache__'])
     zip_path = './out/%s_code.zip' % start_time
     ziphandle = zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED)
     for root, dirs, files in os.walk('.', topdown=True):
