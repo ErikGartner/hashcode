@@ -1,5 +1,5 @@
 from tqdm import tqdm
-from takethetime import ttt
+import time
 
 DEBUG = False
 
@@ -19,12 +19,28 @@ def progressbar(itr):
 
 
 def timethis(name):
-    if DEBUG:
-        return ttt(name=name)
-    else:
-        class controlled_execution:
-            def __enter__(self):
-                pass
-            def __exit__(self, type, value, traceback):
-                pass
-        return controlled_execution()
+    """
+    Usage:
+    with timethis('Sorting loop') as t:
+        do_func()
+        t.info('Nbr items: %d' % len(stuff))
+    """
+    class timewrapper:
+        def __init__(self, name, debug):
+            self.name = name
+            self.messages = []
+            self.debug = debug
+
+        def info(self, msg):
+            self.messages.append(msg)
+
+        def __enter__(self):
+            self.t0 = time.time()
+            return self
+
+        def __exit__(self, type, value, traceback):
+            if self.debug:
+                print('{}: {:0.5f}s'.format(self.name, time.time() - self.t0))
+                for msg in self.messages:
+                    print('- {}'.format(msg))
+    return timewrapper(name, DEBUG)
