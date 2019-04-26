@@ -29,7 +29,6 @@ def create_tile(H, W, D, h, w, projects, max_h=100, max_w=100):
     plans = []
 
     # Generate starting tiles
-
     return _complete_tile(tile, free, plans, projects, D, *tile.shape)
 
 
