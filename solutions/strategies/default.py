@@ -36,7 +36,7 @@ def solve(data, seed, debug):
 
     print("Map:")
     print(city_map)
-    print("Plan:")
-    print(city_plans)
+    dprint("Plan:")
+    dprint(city_plans)
     print("Score: {}".format(score_fn(city_plans, projects, (H, W, D))))
     return city_plans
