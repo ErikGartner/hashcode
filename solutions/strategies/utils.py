@@ -1,6 +1,8 @@
 import collections
 import numpy as np
 
+from ..scoring.scorer import score_plans
+
 Plan = collections.namedtuple("Plan", "id x y")
 
 
@@ -16,7 +18,7 @@ def create_tile(H, W, D, h, w, projects, max_h=100, max_w=100):
     free = frozenset(list(zip(x_coords, y_coords)))
     plans = []
 
-    return _create_tile(tile, free, plans, projects, D, H, W)
+    return _create_tile(tile, free, plans, projects, D, *tile.shape)
 
 
 def _create_tile(tile, free, plans, projects, D, H, W):
@@ -32,7 +34,7 @@ def _create_tile(tile, free, plans, projects, D, H, W):
             if _can_build(f[0], f[1], tile, p, H, W):
                 leaf_tile = True
 
-                new_free = free - set(f)
+                new_free = free - frozenset(f)
                 new_tile = np.array(tile, copy=True)
                 new_tile[f[0] : f[0] + p.h, f[1] : f[1] + p.w] = p.plan
                 new_plans = plans + [Plan(p.id, f[0], f[1])]
@@ -62,7 +64,3 @@ def _can_build(x, y, tile, project, H, W):
         return area
 
     return area.all()
-
-
-def score_plans(plans, projects, D):
-    return 1
