@@ -3,11 +3,11 @@ import sortedcontainers
 import collections
 import numpy as np
 
-Project = collections.namedtuple('Project', 'id t h w ur plan used')
+Project = collections.namedtuple("Project", "id t h w ur plan used")
 
 
 def parse_in(in_file):
-    with open(in_file, 'r') as f:
+    with open(in_file, "r") as f:
         H, W, D, B = [int(c) for c in f.readline().split()]
 
         projects = []
@@ -19,7 +19,7 @@ def parse_in(in_file):
             for h_idx in range(h):
                 row = f.readline()
                 for r_idx, c in enumerate(row):
-                    if c == '#':
+                    if c == "#":
                         plan[h_idx, r_idx] = b
                         used.append((h_idx, r_idx))
             project = Project(b, t, h, w, ur, plan, used)
@@ -28,7 +28,7 @@ def parse_in(in_file):
 
 
 def parse_ans(ans_file):
-    with open(ans_file, 'r') as f:
+    with open(ans_file, "r") as f:
         pass
 
 
@@ -38,9 +38,10 @@ def write_ans(in_file, start_time, strategy, answer):
     Return the path to outfile.
     """
 
-    problem_name = in_file.split('/')[-1].replace('.in', '')
-    outfile = 'out/{}_{}_{}.ans'.format(start_time, problem_name, strategy)
+    problem_name = in_file.split("/")[-1].replace(".in", "")
+    outfile = "out/{}_{}_{}.ans".format(start_time, problem_name, strategy)
 
-    print('Writing {} -> {}'.format(in_file, outfile))
-    with open(outfile, 'w') as f:
-        pass
+    print("Writing {} -> {}".format(in_file, outfile))
+    with open(outfile, "w") as f:
+        f.write("{}\n".format(len(answer)))
+        f.writelines(["{} {} {}\n".format(plan.id, plan.x, plan.y) for plan in answer])
