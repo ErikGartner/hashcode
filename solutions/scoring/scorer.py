@@ -47,21 +47,22 @@ def score_plans(planned_projects, projects, D):
     planned_residentials = [project for project in planned_dicts
                             if project_id[project['id']].t == 'R']
     planned_utilities = [project for project in planned_dicts
-                            if project_id[project['id']].t == 'U']
+                         if project_id[project['id']].t == 'U']
 
     utility_coords = []
     utility_type = []
     for utility in planned_utilities:
         coords = np.array(list(zip(utility['used_w'], utility['used_h'])))
         utility_coords.extend(coords)
-        utility_type = [project_id[utility['id']].ur]*len(coords)
+        utility_type.extend([project_id[utility['id']].ur]*len(coords))
+
     utility_type = np.array(utility_type)
     score = 0
     if len(planned_utilities) > 0:
         for building in planned_residentials:
             building_coords = np.array(list(zip(building['used_w'], building['used_h'])))
             utilities_reached = is_within_reach(building_coords, utility_coords, D)
-            utilities_reached = np.sum(utilities_reached, axis=1) >= 1
+            utilities_reached = np.sum(utilities_reached, axis=0) >= 1
             utility_types_reached = utility_type[utilities_reached]
             types_reached = len(np.unique(utility_types_reached))
             score += types_reached * project_id[building['id']].ur
