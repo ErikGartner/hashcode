@@ -1,13 +1,31 @@
 import datetime
 import sortedcontainers
 import collections
+import numpy as np
 
-Point = collections.namedtuple('Point', 'x y')
+Project = collections.namedtuple('Project', 'id t h w ur plan used')
 
 
 def parse_in(in_file):
     with open(in_file, 'r') as f:
-        pass
+        H, W, D, B = [int(c) for c in f.readline().split()]
+
+        projects = []
+        for b in range(B):
+            t, h, w, ur = f.readline().split()
+            h, w, ur = int(h), int(w), int(ur)
+            plan = np.full((h, w), -1, dtype=np.int8)
+            used = 0
+            for h_idx in range(h):
+                row = f.readline()
+                for r_idx, c in enumerate(row):
+                    if c == '#':
+                        plan[h_idx, r_idx] = b
+                        used += 1
+            project = Project(b, t, h, w, ur, plan, used)
+            projects.append(project)
+
+    return projects
 
 
 def parse_ans(ans_file):
