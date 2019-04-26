@@ -21,6 +21,8 @@ def solve(data, seed, debug):
     tile, score, plans = create_tile(
         H, W, D, max_h, max_w, projects, TILE_MAX_H, TILE_MAX_W
     )
+
+    return plans
     print("Tile:")
     print(tile)
 

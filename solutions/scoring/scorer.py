@@ -1,6 +1,8 @@
 import numpy as np
 from scipy.spatial import distance
-
+from tqdm import tqdm
+np.set_printoptions(linewidth=250, threshold=100000)
+import sys
 
 def score(planned_projects, projects, map_info):
     print("Generating pid to project map..")
@@ -47,7 +49,7 @@ def is_legal_plan(city_map, building):
 
 def is_within_reach(residential_coords, utility_coords, D):
     Y = distance.cdist(residential_coords, utility_coords, "cityblock")
-    return Y < D
+    return Y <= D
 
 
 def score_plans(planned_projects, projects, D):
@@ -79,4 +81,5 @@ def score_plans(planned_projects, projects, D):
             utility_types_reached = utility_type[utilities_reached]
             types_reached = len(np.unique(utility_types_reached))
             score += types_reached * project_id[building["id"]].ur
+
     return score
