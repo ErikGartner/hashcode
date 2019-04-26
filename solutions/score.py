@@ -3,11 +3,11 @@ import os
 import json
 
 from .utils.parser import parse_ans
+from .scoring.scorer import score
 
-
-def do_scoring(ans):
+def do_scoring(ans, projects, map_info):
     """Implement me to do actual scoring from answer"""
-    return 0
+    return score(ans, projects, map_info)
 
 
 def score_answers():
