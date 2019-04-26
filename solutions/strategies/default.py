@@ -5,6 +5,8 @@ import algorithms
 from ..utils import parse_in, write_ans, dprint, progressbar, timethis
 from .utils import *
 
+from ..scoring.scorer import score as score_fn
+
 
 TILE_MAX_H = 100
 TILE_MAX_W = 100
@@ -32,7 +34,9 @@ def solve(data, seed, debug):
             for p in plans:
                 city_plans.append(Plan(p.id, p.x + x, p.y + y))
 
-    print("Final map")
+    print("Map:")
     print(city_map)
+    print("Plan:")
     print(city_plans)
+    print("Score: {}".format(score_fn(city_plans, projects, (H, W, D))))
     return city_plans
