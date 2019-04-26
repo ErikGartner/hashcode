@@ -6,6 +6,12 @@ from ..scoring.scorer import score_plans
 
 Plan = collections.namedtuple("Plan", "id x y")
 
+def n_best_residentials(projects, n=None):
+    residentials = [project for project in projects if project.t == 'R']
+    residentials = sorted(residentials, key=lambda x: x.ur/len(x.used), reverse=True)
+    if n:
+        return residentials[:n]
+    return residentials
 
 def create_tile(H, W, D, h, w, projects, max_h=100, max_w=100):
     """DFS to generate an optimal tile"""
