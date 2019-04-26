@@ -1,4 +1,5 @@
 import collections
+import sortedcontainers
 import numpy as np
 
 from ..scoring.scorer import score_plans
@@ -18,44 +19,37 @@ def create_tile(H, W, D, h, w, projects, max_h=100, max_w=100):
     free = frozenset(list(zip(x_coords, y_coords)))
     plans = []
 
-    return _create_tile(tile, free, plans, projects, D, *tile.shape)
+    return _complete_tile(tile, free, plans, projects, D, *tile.shape)
 
 
-def _create_tile(tile, free, plans, projects, D, H, W):
-    best_score = 0
-    best_tile = tile
-    best_plans = plans
+def _complete_tile(tile, free, plans, projects, D, H, W):
 
-    leaf_tile = True
+    for f in free:
+        best_score = -1
+        best_tile = tile
+        best_plans = plans
 
-    for p in projects:
-        for f in free:
+        for p in projects:
             # We can build project p at corner x, y
             if _can_build(f[0], f[1], tile, p, H, W):
-                leaf_tile = True
-
-                new_free = free - frozenset(f)
                 new_tile = np.array(tile, copy=True)
                 new_tile[f[0] : f[0] + p.h, f[1] : f[1] + p.w] = p.plan
                 new_plans = plans + [Plan(p.id, f[0], f[1])]
-                new_tile, score, new_plans = _create_tile(
-                    new_tile, new_free, new_plans, projects, D, H, W
-                )
+                score = score_plans(new_plans, projects, D)
 
                 if score > best_score:
                     best_tile = new_tile
                     best_plans = new_plans
                     best_score = score
 
-    if leaf_tile:
-        # Cant build more. Score the tile
-        best_score = score_plans(plans, projects, D)
+        tile = best_tile
+        plans = best_plans
 
     return best_tile, best_score, best_plans
 
 
 def _can_build(x, y, tile, project, H, W):
-    if x + project.h >= H or y + project.w >= W:
+    if x + project.h > H or y + project.w > W:
         return False
 
     area = tile[x : x + project.h, y : y + project.w] == -1
