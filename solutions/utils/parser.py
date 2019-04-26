@@ -15,16 +15,15 @@ def parse_in(in_file):
             t, h, w, ur = f.readline().split()
             h, w, ur = int(h), int(w), int(ur)
             plan = np.full((h, w), -1, dtype=np.int8)
-            used = 0
+            used = []
             for h_idx in range(h):
                 row = f.readline()
                 for r_idx, c in enumerate(row):
                     if c == '#':
                         plan[h_idx, r_idx] = b
-                        used += 1
+                        used.append((h_idx, r_idx))
             project = Project(b, t, h, w, ur, plan, used)
             projects.append(project)
-
     return projects
 
 

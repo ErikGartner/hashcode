@@ -10,6 +10,7 @@ nose = "*"
 sortedcontainers = "*"
 algorithms = "*"
 tqdm = "*"
+numpy = "*"
 
 [requires]
 python_version = "3.5"
