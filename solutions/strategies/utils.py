@@ -2,6 +2,7 @@ import collections
 import sortedcontainers
 import numpy as np
 
+from ..utils.status import progressbar
 from ..scoring.scorer import score_plans
 
 Plan = collections.namedtuple("Plan", "id x y")
@@ -27,12 +28,14 @@ def create_tile(H, W, D, h, w, projects, max_h=100, max_w=100):
     free = frozenset(list(zip(x_coords, y_coords)))
     plans = []
 
+    # Generate starting tiles
+
     return _complete_tile(tile, free, plans, projects, D, *tile.shape)
 
 
 def _complete_tile(tile, free, plans, projects, D, H, W):
 
-    for f in free:
+    for f in progressbar(free):
         best_score = -1
         best_tile = tile
         best_plans = plans

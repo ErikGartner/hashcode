@@ -27,8 +27,8 @@ def solve(data, seed, debug):
     # Apply tile to city map
     city_plans = []
     city_map = np.full((H, W), -1)
-    for x in range(0, H, tile_h):
-        for y in range(0, W, tile_w):
+    for x in range(0, H - tile_h, tile_h):
+        for y in range(0, W - tile_w, tile_w):
             city_map[x : x + tile_h, y : y + tile_w] = tile
 
             for p in plans:
