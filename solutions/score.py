@@ -5,15 +5,17 @@ import json
 from .utils.parser import parse_ans
 from .scoring.scorer import score
 
-def do_scoring(ans, projects, map_info):
+
+def do_scoring(ans):
     """Implement me to do actual scoring from answer"""
-    return score(ans, projects, map_info)
+    a, projects, map_info = ans
+    return score(a, projects, map_info)
 
 
 def score_answers():
     """Scores all answers"""
-    for ans_file in sorted(glob.glob(os.path.join('out', '*.ans'))):
-        out_file = ans_file.replace('.ans', '.score')
+    for ans_file in sorted(glob.glob(os.path.join("out", "*.ans"))):
+        out_file = ans_file.replace(".ans", ".score")
 
         if os.path.isfile(out_file):
             # Already scored, skip file
@@ -21,10 +23,10 @@ def score_answers():
 
         ans = parse_ans(ans_file)
         score = do_scoring(ans)
-        print('Scoring {} -> {}: {}'.format(ans_file, out_file, score))
+        print("Scoring {} -> {}: {}".format(ans_file, out_file, score))
 
-        with open(out_file, 'w') as f:
-            f.write('{}'.format(score))
+        with open(out_file, "w") as f:
+            f.write("{}".format(score))
 
     update_highscore()
 
@@ -32,16 +34,16 @@ def score_answers():
 def update_highscore():
     """Goes over all scores and finds the best answers"""
     scores = {}
-    for score_file in sorted(glob.glob(os.path.join('out', '*.score'))):
-        problem = score_file.rsplit('_', 2)[0].split('/')[1]
-        ans_file = score_file.replace('.score', '.ans')
+    for score_file in sorted(glob.glob(os.path.join("out", "*.score"))):
+        problem = score_file.rsplit("_", 2)[0].split("/")[1]
+        ans_file = score_file.replace(".score", ".ans")
 
-        with open(score_file, 'r') as f:
+        with open(score_file, "r") as f:
             score = int(f.read())
 
-        current = scores.get(problem, {'ans': '', 'score': -1})
-        if current['score'] < score:
-            scores[problem] = {'ans': ans_file, 'score': score}
+        current = scores.get(problem, {"ans": "", "score": -1})
+        if current["score"] < score:
+            scores[problem] = {"ans": ans_file, "score": score}
 
-    with open('out/highscores.json', 'w') as f:
+    with open("out/highscores.json", "w") as f:
         json.dump(scores, f, indent=2)
