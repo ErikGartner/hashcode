@@ -24,7 +24,7 @@ def parse_in(in_file):
                         used.append((h_idx, r_idx))
             project = Project(b, t, h, w, ur, plan, used)
             projects.append(project)
-    return projects
+    return H, W, D, B, projects
 
 
 def parse_ans(ans_file):
