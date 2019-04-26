@@ -23,19 +23,42 @@ def create_tile(H, W, D, h, w, projects, max_h=100, max_w=100):
     h = min(H, h * 2, max_h)
     w = min(W, w * 2, max_w)
 
-    tile = np.full((h, w), -1, np.int8)
-    x_coords, y_coords = np.where(tile == -1)
-    free = frozenset(list(zip(x_coords, y_coords)))
-    plans = []
-
     # Generate starting tiles
-    return _complete_tile(tile, free, plans, projects, D, *tile.shape)
+    start_res = n_best_residentials(projects, n=5)
+
+    best_score = -1
+    best_tile = None
+    best_plans = []
+    for res in start_res:
+        tile = np.full((h, w), -1, np.int8)
+        x_coords, y_coords = np.where(tile == -1)
+        free = frozenset(list(zip(x_coords, y_coords)))
+
+        x = h // 2
+        y = w // 2
+        if not _can_build(x, y, tile, res, h, w):
+            x = 0
+            y = 0
+
+        if not _can_build(x, y, tile, res, h, w):
+            continue
+
+        plans = [Plan(res.id, x, y)]
+
+        tile, score, plans = _complete_tile(tile, free, plans, projects, D, *tile.shape)
+
+        if score > best_score:
+            best_tile = tile
+            best_plans = plans
+            best_score = score
+
+    return best_tile, best_score, best_plans
 
 
-def _complete_tile(tile, free, plans, projects, D, H, W):
+def _complete_tile(tile, free, plans, projects, D, H, W, cutoff=0):
 
     for f in progressbar(free):
-        best_score = -1
+        best_score = cutoff
         best_tile = tile
         best_plans = plans
 
