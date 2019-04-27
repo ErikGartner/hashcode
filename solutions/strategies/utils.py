@@ -34,3 +34,12 @@ class Servers:
                 self.compiled_all.add(c[1])
             else:
                 self.compiled[c[0]].add(c[1])
+
+
+def remove_timed_out_targets(targets, t, comps):
+    dead = set()
+    for target in targets:
+        if target.deadline - t - comps[target.file.name].c < 0:
+            dead.add(target)
+
+    return targets - dead
