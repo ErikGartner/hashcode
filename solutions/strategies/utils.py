@@ -12,7 +12,8 @@ class Servers:
         self.compiled = {n: set() for n in range(N)}
         self.compiled_all = set()
         self.compile_q = collections.defaultdict(lambda: set())
-        self.T = 0
+        self.compiling = set()
+        self.T = -1
         self.compile_orders = []
 
     def compile(self, comp, server):
@@ -24,6 +25,7 @@ class Servers:
         self.compile_q[self.T + comp.c].add((server, comp))
         self.compile_q[self.T + comp.c + comp.r].add((-1, comp))
         self.compile_orders.append(order(comp.name, server))
+        self.compiling.add(comp)
 
     def next_t(self):
         self.T = self.T + 1
