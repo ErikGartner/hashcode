@@ -46,5 +46,6 @@ def remove_timed_out_targets(targets, t, comps):
     for target in targets:
         if target.deadline < t:
             dead.add(target)
-
+    if len(dead) > 0:
+        print("Remove: {}".format(len(dead)))
     return targets - dead

@@ -8,6 +8,17 @@ from .utils import *
 """ Each target per machine. No repl"""
 
 
+def total_time(x):
+    f = x.file
+    t = f.c
+    for d in f.rec_deps:
+        t += d.c
+    if x.deadline > t:
+        return t
+    else:
+        return 1000000000
+
+
 def solve(data, seed, debug):
     C, T, S, comps, children, targets = data
 
@@ -16,7 +27,7 @@ def solve(data, seed, debug):
     time = -1
 
     # Sort by remaining time
-    targets = SortedSet(targets, key=lambda x: x.deadline)
+    targets = SortedSet(targets, key=lambda x: total_time(x))
 
     # target -> server
     server_mappings = collections.defaultdict(lambda: None)
@@ -45,9 +56,21 @@ def solve(data, seed, debug):
                 if len(free_servers) > 0:
                     # TODO: Server with most deps already.
                     server = next(iter(free_servers))
+                    free_servers = sorted(
+                        free_servers,
+                        key=lambda x: len(target.file.rec_deps - servers.compiled[x]),
+                    )
+
                     server_mappings[target] = server
 
-                    print("Mapping {} to {}".format(target.file.name, server))
+                    print(
+                        "Mapping {} to {}, missing deps: {}/{}".format(
+                            target.file.name,
+                            server,
+                            len(target.file.rec_deps - servers.compiled[server]),
+                            len(target.file.rec_deps),
+                        )
+                    )
                 else:
                     print("weird queueing issue.")
 
@@ -56,12 +79,13 @@ def solve(data, seed, debug):
 
             # Compile a dependency
             uncompiled_deps = sorted(
-                target.file.rec_deps - servers.compiled[server], key=lambda x: x.c
+                target.file.rec_deps - servers.compiled[server], key=lambda x: x.r
             )
             if len(uncompiled_deps) > 0:
                 dep = next(iter(uncompiled_deps))
                 servers.compile(dep, server)
             else:
+                print("Compile target {}".format(target.file.name))
                 servers.compile(target.file, server)
                 finished_targets.add(target)
                 server_mappings[target] = None
