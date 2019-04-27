@@ -30,12 +30,17 @@ def parse_in(in_file):
             comp = Compilation(cols[0], int(cols[1]), int(cols[2]), deps, rec_deps)
             comps[comp.name] = comp
 
+        targets = []
+        for t in range(T):
+            trow = f.readline().split()
+            targets.append(Target(comps[trow[0]], int(trow[1]), int(trow[2])))
+
     children = collections.defaultdict(lambda: set())
     for comp in comps.values():
         for dep in comp.rec_deps:
             children[dep].add(comp)
 
-    return C, T, S, comps, children
+    return C, T, S, comps, children, targets
 
 
 def parse_ans(ans_file):
