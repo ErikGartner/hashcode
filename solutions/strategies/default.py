@@ -7,25 +7,23 @@ from .utils import *
 
 
 def solve(data, seed, debug):
-    C, T, S, comps, children, targets
+    C, T, S, comps, children, targets = data
 
     servers = Servers(S)
     targets = set(targets)
 
-    most_used_deps = SortedSet(
-        comps.values(), key=lambda c: len(children[c]), reversed=True
-    )
+    most_used_deps = SortedSet(comps.values(), key=lambda c: -1 * len(children[c]))
 
     T = -1
     while len(most_used_deps) > 0:
         T += 1
 
         if len(servers.free) == 0:
-            self.next_t()
+            servers.next_t()
             continue
 
         while (len(servers.free)) > 0:
-            s = next(servers.free)
+            s = next(iter(servers.free))
 
             dep = None
             for t in targets:
