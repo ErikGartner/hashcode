@@ -26,4 +26,6 @@ def write_ans(in_file, start_time, strategy, answer):
 
     print('Writing {} -> {}'.format(in_file, outfile))
     with open(outfile, 'w') as f:
-        pass
+        f.write(len(answer) + '\n')
+        for file in answer:
+            f.write(step.name + ' ' + step.server + '\n')
