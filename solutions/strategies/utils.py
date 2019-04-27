@@ -19,6 +19,7 @@ class Servers:
 
     def compile(self, comp, server):
         assert server in self.free
+        assert comp not in self.compiled[server]
         self.free.remove(server)
         done_t = self.T + comp.c
         self.free_at[server] = self.T + comp.c
