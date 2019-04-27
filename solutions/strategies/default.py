@@ -7,4 +7,6 @@ from .utils import *
 
 
 def solve(data, seed, debug):
-    pass
+    C, T, S, comps, children = data
+
+    return []

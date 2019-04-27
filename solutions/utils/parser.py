@@ -30,7 +30,12 @@ def parse_in(in_file):
             comp = Compilation(cols[0], int(cols[1]), int(cols[2]), deps, rec_deps)
             comps[comp.name] = comp
 
-    return C, T, S, comps
+    children = collections.defaultdict(lambda: set())
+    for comp in comps.values():
+        for dep in comp.rec_deps:
+            children[dep].add(comp)
+
+    return C, T, S, comps, children
 
 
 def parse_ans(ans_file):
