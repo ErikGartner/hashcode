@@ -11,6 +11,7 @@ class Servers:
         self.freed_at = collections.defaultdict(lambda: set())
         self.compiled = {n: set() for n in range(N)}
         self.compiled_all = set()
+        self.compiled_any = set()
         self.compile_q = collections.defaultdict(lambda: set())
         self.compiling = set()
         self.T = -1
@@ -36,6 +37,7 @@ class Servers:
                 self.compiled_all.add(c[1])
             else:
                 self.compiled[c[0]].add(c[1])
+                self.compiled_any.add(c[1])
 
 
 def remove_timed_out_targets(targets, t, comps):
@@ -45,8 +47,3 @@ def remove_timed_out_targets(targets, t, comps):
             dead.add(target)
 
     return targets - dead
-
-
-class DepTree:
-    def add_target(target):
-        pass

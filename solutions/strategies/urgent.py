@@ -50,6 +50,7 @@ def solve(data, seed, debug):
             if dep is not None:
                 # Look at compile target rec_deps
                 servers.compile(dep, s)
+                continue
 
             if dep is None:
                 # Can't compile anythin right now, next time step.
