@@ -40,6 +40,7 @@ def parse_in(in_file):
         for dep in comp.rec_deps:
             children[dep].add(comp)
 
+    assert len(targets) == T
     return C, T, S, comps, children, targets
 
 

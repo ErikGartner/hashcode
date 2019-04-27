@@ -5,25 +5,21 @@ import algorithms
 from ..utils import parse_in, write_ans, dprint, progressbar, timethis
 from .utils import *
 
+""" Each target per machine. No repl"""
+
 
 def solve(data, seed, debug):
     C, T, S, comps, children, targets = data
 
     servers = Servers(S)
 
-    most_used_deps = set(comps.values())
-    all_target_deps = set()
-    for target in targets:
-        all_target_deps = all_target_deps.union(target.file.rec_deps)
-
-    # Only care about things related to targets
-    most_used_deps = most_used_deps.intersection(all_target_deps)
-    most_used_deps = SortedSet(comps.values(), key=lambda c: -1 * len(children[c]))
-
     time = -1
 
     # Sort by remaining time
     targets = SortedSet(targets, key=lambda x: x.deadline)
+
+    # target -> server
+    server_mappings = collections.defaultdict(lambda: None)
 
     while len(targets) > 0:
         # Update clock
@@ -31,48 +27,46 @@ def solve(data, seed, debug):
         servers.next_t()
 
         # Remove dead target
+        removed = targets
         targets = remove_timed_out_targets(targets, time, comps)
+        removed = removed - targets
+        for r in removed:
+            server_mappings[r] = None
 
+        # Look at max S number of targets
+        active_targets = targets[:S]
         finished_targets = set([])
-        # Target with closest deadline
-        for target in targets:
+        for target in active_targets:
+            server = server_mappings[target]
+            if server is None:
+                # Accuire server
+                free_servers = set(list(range(S))) - set(server_mappings.values())
 
-            if len(servers.free) == 0:
-                break
+                if len(free_servers) > 0:
+                    # TODO: Server with most deps already.
+                    server = next(iter(free_servers))
+                    server_mappings[target] = server
 
-            # Compile target if we can
-            if compile_best_server(target.file, servers):
-                finished_targets.add(target)
+                    print("Mapping {} to {}".format(target.file.name, server))
+                else:
+                    print("weird queueing issue.")
+
+            if server not in servers.free:
                 continue
 
-        # Compile to all dependencies
-        most_used_deps = most_used_deps - servers.compiled_all
-        while len(servers.free) > 0:
-            compile_best_server(most_used_deps, servers)
-
-        # Remove finished targets
-        targets = targets - finished_targets
-
-        # Work on remaining targets dependencies
-        for target in targets:
-
-            if len(servers.free) == 0:
-                break
-
-            # Compile dependencies, sort by longest compile time! Start compiling now!
+            # Compile a dependency
             uncompiled_deps = sorted(
-                target.file.rec_deps - servers.compiling,
-                key=lambda x: x.c + x.r,
-                reverse=True,
+                target.file.rec_deps - servers.compiled[server], key=lambda x: x.c
             )
+            if len(uncompiled_deps) > 0:
+                dep = next(iter(uncompiled_deps))
+                servers.compile(dep, server)
+            else:
+                servers.compile(target.file, server)
+                finished_targets.add(target)
+                server_mappings[target] = None
 
-            # TODO: Sort by replication time??
-            for dep in uncompiled_deps:
-                if len(servers.free) == 0:
-                    break
-
-                # Check individual servers?
-                compile_best_server(dep, servers)
+        targets = targets - finished_targets
 
     # Write answer
     return servers.compile_orders
