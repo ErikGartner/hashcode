@@ -41,7 +41,12 @@ class Servers:
 def remove_timed_out_targets(targets, t, comps):
     dead = set()
     for target in targets:
-        if target.deadline - t - comps[target.file.name].c < 0:
+        if target.deadline < t + comps[target.file.name].c:
             dead.add(target)
 
     return targets - dead
+
+
+class DepTree:
+    def add_target(target):
+        pass

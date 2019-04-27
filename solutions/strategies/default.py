@@ -20,15 +20,12 @@ def solve(data, seed, debug):
     while len(most_used_deps) > 0:
         # Update clock
         time += 1
+        servers.next_t()
 
         targets = remove_timed_out_targets(targets, time, comps)
 
         # Resort targets
         targets.update()
-
-        if len(servers.free) == 0:
-            servers.next_t()
-            continue
 
         while (len(servers.free)) > 0:
             s = next(iter(servers.free))
