@@ -3,7 +3,8 @@
 
 ## Results
 
-- **[2019](https://github.com/ErikGartner/hashcode/tree/2019):** *Our heaps don't lie*, 36th place out of ~6500 teams with 1,073,160 pts
+- **[2019 Qualifiers](https://github.com/ErikGartner/hashcode/tree/2019):** *Our heaps don't lie*, 36th place out of ~6500 teams with [1,073,160 pts](https://codingcompetitions.withgoogle.com/hashcode/archive/2019)
+- **[2019 Finals](https://github.com/ErikGartner/hashcode/tree/2019-finals):** *Our heaps don't lie*, 24th place out of 41 teams with [4,757,528 pts](https://codingcompetitions.withgoogle.com/hashcode/archive/2019)
 
 ## Strategy
 
