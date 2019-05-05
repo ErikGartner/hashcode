@@ -1,4 +1,4 @@
-# Hashcode
+# Hash Code
 *Our template and solutions starting from 2019*
 
 ## Results
